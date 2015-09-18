@@ -168,7 +168,7 @@ void Init_narray_ffi_c() {
   id = rb_intern("NArray");
   klass = rb_const_get(rb_cObject, id);
   rb_define_private_method(klass, "address", na_address, 0);
-  rb_define_singleton_method(cNArray,"to_na",na_s_to_na_pointer,-1);
-  rb_define_singleton_method(cNArray,"to_narray",na_s_to_na_pointer,-1);
+  rb_define_singleton_method(klass, "to_na", na_s_to_na_pointer, -1);
+  rb_define_singleton_method(klass, "to_narray", na_s_to_na_pointer, -1);
 }
 
