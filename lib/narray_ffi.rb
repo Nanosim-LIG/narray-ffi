@@ -9,6 +9,6 @@ require "narray_ffi_c.so"
 
 class NArray
   def to_ptr
-    return FFI::Pointer::new( address() )
+    return FFI::Pointer::new( address() ).slice(0, size*element_size)
   end
 end

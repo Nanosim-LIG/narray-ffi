@@ -22,6 +22,16 @@ def test_function
   diff.each { |e|
     raise "Computation error" if e != 0.0
   }
+  n4 = NArray.to_na(n2.to_ptr.read_string(16*8), NArray::FLOAT, 16)
+  diff = n1 - n4
+  diff.each { |e|
+    raise "Computation error" if e != 0.0
+  }
+  n5 = NArray.to_na(n2.to_ptr, NArray::FLOAT, 2, 4, 2)
+  diff = n5.flatten - n1
+  diff.each { |e|
+    raise "Computation error" if e != 0.0
+  }
 end
 
 test_function
