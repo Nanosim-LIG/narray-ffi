@@ -1,5 +1,10 @@
 require "narray"
 require "ffi"
+class NArray
+  class << self
+    alias to_na_old to_na
+  end
+end
 require "narray_ffi_c.so"
 
 class NArray
