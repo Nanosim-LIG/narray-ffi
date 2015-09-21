@@ -40,3 +40,8 @@ end
 test_function
 GC.start
 puts "Success!"
+ALIGNMENT = 1024
+a1 = ANArray::new(NArray::FLOAT, ALIGNMENT, SIZE2, SIZE3, SIZE/(SIZE2*SIZE3))
+raise "Wrong alignment" if (a1.to_ptr.address & (ALIGNMENT-1)) != 0
+raise "Wrong size" if (a1.to_ptr.size/a1.element_size) != SIZE
+puts "Success!"
