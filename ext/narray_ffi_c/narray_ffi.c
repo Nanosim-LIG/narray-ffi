@@ -14,6 +14,31 @@ static VALUE
   return ret;
 }
 
+static VALUE
+ na_to_ptr(VALUE self)
+{
+  struct NARRAY *ary;
+  VALUE mod;
+  VALUE klass;
+  VALUE ret;
+  VALUE address;
+  long length;
+
+  GetNArray(self,ary);
+  mod = rb_const_get(rb_cObject, rb_intern("FFI"));
+  klass = rb_const_get(mod, rb_intern("Pointer"));
+  if ( ary->ref != Qnil ) {
+    if ( rb_funcall(ary->ref, rb_intern("kind_of?"), 1, klass) == Qtrue ) {
+      return ary->ref;
+    }
+  }
+
+  length = na_sizeof[ary->type] * ary->total;
+  ret = rb_funcall(klass, rb_intern("new"), 1, na_address(self));
+  ret = rb_funcall(ret, rb_intern("slice"), 2, LONG2NUM(0), LONG2NUM(length));
+  return ret;
+}
+
 static struct NARRAY*
  na_alloc_struct_empty(int type, int rank, int *shape)
 {
@@ -153,11 +178,9 @@ static VALUE
     rb_raise(rb_eArgError, "Argument is required");
   }
   mod = rb_const_get(rb_cObject, rb_intern("FFI"));
-  if (mod != Qnil) {
-    klass_p = rb_const_get(mod, rb_intern("Pointer"));
-    if ( rb_funcall(argv[0], rb_intern("kind_of?"), 1, klass_p) == Qtrue ){
-      return na_pointer_to_na(argc-1,argv+1,argv[0]);
-    }
+  klass_p = rb_const_get(mod, rb_intern("Pointer"));
+  if ( rb_funcall(argv[0], rb_intern("kind_of?"), 1, klass_p) == Qtrue ){
+    return na_pointer_to_na(argc-1,argv+1,argv[0]);
   }
   rb_funcall2(klass, rb_intern("to_na_old"), argc, argv);
 }
@@ -168,6 +191,8 @@ void Init_narray_ffi_c() {
   id = rb_intern("NArray");
   klass = rb_const_get(rb_cObject, id);
   rb_define_private_method(klass, "address", na_address, 0);
+  rb_define_method(klass, "to_ptr", na_to_ptr, 0);
+  rb_define_alias(rb_singleton_class(klass), "to_na_old", "to_na");
   rb_define_singleton_method(klass, "to_na", na_s_to_na_pointer, -1);
   rb_define_singleton_method(klass, "to_narray", na_s_to_na_pointer, -1);
 }
