@@ -9,10 +9,6 @@ end
 
 dir_config("narray", conf["archdir"])
 
-if /cygwin|mingw/ =~ RUBY_PLATFORM then
-  $LDFLAGS = "libnarray.a " << $LDFLAGS
-end
-
 unless have_header("narray.h")
   begin
     require "rubygems"
@@ -29,6 +25,10 @@ unless have_header("narray.h")
   unless have_header("narray.h")
     abort "missing narray.h" unless have_header("narray.h")
   end
+end
+
+if /cygwin|mingw/ =~ RUBY_PLATFORM then
+  $LDFLAGS = "-l:narray.so " << $LDFLAGS
 end
 
 create_makefile("narray_ffi_c")
