@@ -21,7 +21,6 @@ static VALUE
   VALUE mod;
   VALUE klass;
   VALUE ret;
-  VALUE address;
   long length;
 
   GetNArray(self,ary);
@@ -107,7 +106,6 @@ static void
 static void
  na_mark_ref_empty(struct NARRAY *ary)
 {
-  struct NARRAY *a2;
 
   rb_gc_mark( ary->ref );
 
@@ -182,7 +180,7 @@ static VALUE
   if ( rb_funcall(argv[0], rb_intern("kind_of?"), 1, klass_p) == Qtrue ){
     return na_pointer_to_na(argc-1,argv+1,argv[0]);
   }
-  rb_funcall2(klass, rb_intern("to_na_old"), argc, argv);
+  return rb_funcall2(klass, rb_intern("to_na_old"), argc, argv);
 }
 
 void Init_narray_ffi_c() {
