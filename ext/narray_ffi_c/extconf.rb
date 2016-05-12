@@ -8,12 +8,20 @@ else
 end
 
 dir_config("narray", conf["archdir"])
+
+if /cygwin|mingw/ =~ RUBY_PLATFORM then
+  $LDFLAGS = "libnarray.a " << $LDFLAGS
+end
+
 unless have_header("narray.h")
   begin
     require "rubygems"
-    if spec = Gem::Specification.find_all_by_name("narray").last
+    if spec = Gem::Specification.find_all_by_name("narray").last then
       spec.require_paths.each { |path|
         $CPPFLAGS = "-I" << spec.full_gem_path << "/" << path << "/ " << $CPPFLAGS
+        if /cygwin|mingw/ =~ RUBY_PLATFORM then
+          $LDFLAGS = "-L" << spec.full_gem_path << "/" << path << "/ " << $LDFLAGS
+        end
       }
     end
   rescue LoadError
