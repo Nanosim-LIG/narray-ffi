@@ -192,6 +192,7 @@ void Init_narray_ffi_c() {
   rb_define_method(klass, "to_ptr", na_to_ptr, 0);
   rb_define_alias(rb_singleton_class(klass), "to_na_old", "to_na");
   rb_define_singleton_method(klass, "to_na", na_s_to_na_pointer, -1);
+  rb_undef_method(rb_singleton_class(klass), "to_narray");
   rb_define_singleton_method(klass, "to_narray", na_s_to_na_pointer, -1);
 }
 
