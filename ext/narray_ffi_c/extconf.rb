@@ -13,12 +13,14 @@ unless have_header("narray.h")
   begin
     require "rubygems"
     if spec = Gem::Specification.find_all_by_name("narray").last then
-      spec.require_paths.each { |path|
-        $CPPFLAGS = "-I" << spec.full_gem_path << "/" << path << "/ " << $CPPFLAGS
-        if /cygwin|mingw/ =~ RUBY_PLATFORM then
-          $LDFLAGS = "-L" << spec.full_gem_path << "/" << path << "/ " << $LDFLAGS
-        end
-      }
+      path = spec.require_path
+      if path == "." then
+        path = spec.full_gem_path
+      end
+      $CPPFLAGS = "-I" << path << "/ " << $CPPFLAGS
+      if /cygwin|mingw/ =~ RUBY_PLATFORM then
+        $LDFLAGS = "-L" << path << "/" << $LDFLAGS
+      end
     end
   rescue LoadError
   end
