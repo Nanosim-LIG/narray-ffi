@@ -14,7 +14,7 @@ unless have_header("narray.h")
     require "rubygems"
     if spec = Gem::Specification.find_all_by_name("narray").last then
       path = spec.require_path
-      if path == "." then
+      if not File.exist?( path+"/narray.h") then
         path = spec.full_gem_path
       end
       $CPPFLAGS = "-I" << path << "/ " << $CPPFLAGS
