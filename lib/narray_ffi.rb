@@ -17,8 +17,7 @@ class ANArray < NArray
   def self.new(typecode, alignment, *size)
     raise "Wrong type code" if not FFITYPECODES[typecode]
     raise "Invalid alignment" unless alignment > 0 and ( alignment & (alignment - 1) == 0 )
-    total = size[0]
-    size[1..-1].each { |sz| total = total * sz }
+    total = size.reduce(:*)
     total = 2*total if typecode == NArray::COMPLEX or typecode == NArray::SCOMPLEX
     mem = FFI::MemoryPointer::new( FFITYPECODES[typecode], total + alignment - 1 )
     address = mem.address
