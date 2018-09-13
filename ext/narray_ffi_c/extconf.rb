@@ -19,7 +19,7 @@ unless have_header("narray.h")
       end
       $CPPFLAGS = "-I" << path << "/ " << $CPPFLAGS
       if /cygwin|mingw/ =~ RUBY_PLATFORM then
-        $LDFLAGS = "-L" << path << "/" << $LDFLAGS
+        $LDFLAGS = "-L" << path << "/ " << $LDFLAGS
       end
     end
   rescue LoadError
